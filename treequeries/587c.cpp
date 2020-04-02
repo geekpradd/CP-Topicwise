@@ -95,14 +95,14 @@ void solve(){
 			b1--;
 		}
 		int lca = (cur_u == cur_v ? cur_u : parent[cur_u]);
-		bool got = 0;
+		bool got1 = 0;
 		vector<int> res;
 		int logjump = log2(depth[v]);
 		while (v != lca){
 			int to = jump[v][logjump];
 			if (to == 0 || depth[to] < depth[lca]){ logjump--; continue;}
-			if (!got){
-				res = ans[v][logjump]; got = 1;	
+			if (!got1){
+				res = ans[v][logjump]; got1 = 1;	
 			}
 			else {
 				vector<int> result;
@@ -112,7 +112,7 @@ void solve(){
 			v = to;
 			logjump--;
 		}
-		got = 0;
+		bool got2 = 0;
                 vector<int> res2;
                 logjump = log2(depth[u]);
                 while (u != lca){
@@ -121,8 +121,8 @@ void solve(){
 				logjump--;
 				continue;
 			}
-                        if (!got){
-                                res2 = ans[u][logjump]; got = 1;
+                        if (!got2){
+                                res2 = ans[u][logjump]; got2 = 1;
                         }
                         else {
                                 vector<int> result;
@@ -134,6 +134,8 @@ void solve(){
                 }       
 
 		vector<int> finalres;
+		if (!(got1|got2))
+			finalres = cvec[lca];
 		combine(res, res2, finalres);
 		cout << min( (int) finalres.size(), a) << " ";
 		for (int i=0; i<min( (int) finalres.size(), a); ++i){
