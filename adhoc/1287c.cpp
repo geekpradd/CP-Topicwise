@@ -62,7 +62,10 @@ void solve(){
 		}
 	}
 	int ans; 
-	if (a[0]==0){
+	if (n==1){
+		ans = 0;
+	}
+	else if (a[0]==0){
 		ans = min(dp[1][even-1][odd][0], dp[1][even][odd-1][1]);
 	}
 	else if (a[0]%2){
