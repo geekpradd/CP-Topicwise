@@ -21,6 +21,25 @@ int inverse(int n){
 }
 
 void solve(){
+	int x, n, m; 
+	cin >> x >> n >> m;
+	while (n>0){
+		int y = x/2 + 10;
+		if (y < x){
+			x = y;
+		}
+		n--;
+	}
+	while (m > 0){
+		x = x - 10;
+		m--;
+	}
+	if (x<=0){
+		cout << "YES" << endl;
+	}
+	else {
+		cout << "NO" << endl;
+	}
 
 }
 

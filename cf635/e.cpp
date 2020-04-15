@@ -21,7 +21,30 @@ int inverse(int n){
 }
 
 void solve(){
+	string s, t;
+	cin >> s;
+	cin >> t;
+	int dp[s.length()][t.length()];
+	for (int i=0; i<s.length(); ++i){
+		for (int j=0; j<t.length(); ++j){
+			char l = s[i];
+			char x = t[t.length()-1-j];
+			if (i!=0)
+				dp[i][j] = dp[i-1][j];
+			else
+				dp[i][j] = 0;
+			if (l==x){
+				if (j!=0){
+					dp[i][j] = dp[i][j] + (i !=0 ? dp[i-1][j-1] : 0);
+				}
+				else 
+					dp[i][j] = dp[i][j] + power(2, i);
+			}
 
+			cout << "Dp " << i << "  " << j << " " << dp[i][j] << endl;
+		}
+	}
+	cout << dp[s.length()-1][t.length()-1] << endl;
 }
 
 
@@ -30,8 +53,5 @@ signed main(){
 	#ifndef ONLINE_JUDGE
 	freopen("input.txt", "r", stdin);
 	#endif
-	int t; cin >> t;
-	while (t--){
-		solve();
-	}
+	solve();
 }
