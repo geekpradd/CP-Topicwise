@@ -27,11 +27,10 @@ void solve(){
 
 signed main(){
 	cin.tie(NULL); ios_base::sync_with_stdio(false);
-	#ifndef ONLINE_JUDGE
-	freopen("input.txt", "r", stdin);
-	#endif
 	int t; cin >> t;
-	while (t--){
+	for (int w=1; w<=t; ++w){
+		cout << "Case #" << w << ": " << endl;
 		solve();
 	}
+	return 0;
 }
