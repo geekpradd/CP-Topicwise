@@ -40,6 +40,7 @@ signed main(){
 	int t; scanf("%llu", &t);
 	// ofstream fout("log2.txt");
 	inv = inverse(6);
+	cout << inv << endl;
 	while (t--){
 		int n; scanf("%llu", &n);
 		int ans = (n)%MOD;

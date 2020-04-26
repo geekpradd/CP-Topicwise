@@ -21,7 +21,24 @@ int inverse(int n){
 }
 
 void solve(){
-
+	int n, k; cin >> n >> k;
+	int a[n+1];
+	int pref[n+1]; pref[0] = 0;
+	for (int i=1; i<=n; ++i) cin >> a[i];
+	for (int i=1; i<=n; ++i){
+		pref[i] = pref[i-1];
+		if (i == 1 || i == n) continue;
+		if (a[i] > a[i-1] && a[i] > a[i+1]) pref[i] += 1;
+	}
+	int p = 0;
+	int max_l = 1;
+	for (int l = 1; l<=n-k+1; ++l){
+		if (pref[l+k-2] - pref[l] > p){
+			p = pref[l+k-2] - pref[l];
+			max_l = l;
+		}
+	}
+	cout << p+1 << " " << max_l << endl;
 }
 
 

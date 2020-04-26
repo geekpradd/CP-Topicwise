@@ -21,7 +21,27 @@ int inverse(int n){
 }
 
 void solve(){
-
+	int n; cin >> n;
+	int index[n+1];
+	int a[n+1];
+	for (int i=1; i<=n; ++i) {
+		cin >> a[i];
+		index[a[i]] = i;
+	}
+	int cur_r = n;
+	bool pos = 1; 
+	for (int i=1; i<=n; ++i){
+		int j = index[i];
+		for (int k=j; k<=cur_r; ++k){
+			if (a[k] != i) {
+				pos = 0; break;
+			}
+			if (k!=cur_r)
+				i++;
+		}
+		cur_r = j - 1;
+	}
+	cout << (pos ? "Yes" : "No") << endl;
 }
 
 

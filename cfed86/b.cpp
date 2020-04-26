@@ -21,7 +21,33 @@ int inverse(int n){
 }
 
 void solve(){
-
+	string t; cin >> t;
+	char b = t[0];
+	bool same = 1;
+	for (int i=1; i<t.size(); ++i){
+		if (t[i]!=b){
+			same = 0; break;
+		}
+	}
+	if (same){
+		cout << t << endl; return;
+	}
+	else {
+		char s = t[0];
+		cout << s;
+		for (int i=1; i<t.size(); ++i){
+			if (t[i]==s){
+				int val = t[i] - '0';
+				// cout << "i " << i << " val " << val << endl;
+				int other = 1 - val;
+				char z = (other + '0');
+				cout << z;
+			}
+			cout << t[i];
+			s = t[i];
+		}
+		cout << endl;
+	}
 }
 
 

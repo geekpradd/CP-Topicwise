@@ -21,7 +21,21 @@ int inverse(int n){
 }
 
 void solve(){
-
+	int n, a, b, c, d;
+	cin >> n >> a >> b >> c >> d;
+	bool pos = 0;
+	for (int i=c-d; i<=c+d; ++i){
+		if (i >= n*(a-b) && i<=n*(a+b)){
+			pos = 1;
+			break;
+		}
+	}
+	if (pos){
+		cout << "Yes" << endl;
+	}
+	else {
+		cout << "No" << endl;
+	}
 }
 
 

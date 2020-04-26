@@ -21,7 +21,11 @@ int inverse(int n){
 }
 
 void solve(){
-
+	int x, y; cin >> x >> y;
+	int a, b; cin >> a >> b;
+	if (b>2*a)
+		b = 2*a;
+	cout << min(x,y)*b + a*abs(x-y) << endl;
 }
 
 
