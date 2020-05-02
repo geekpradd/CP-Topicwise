@@ -1,5 +1,4 @@
 #include <bits/stdc++.h>
-#define int long long
 using namespace std;
 
 signed main(){
@@ -14,14 +13,15 @@ signed main(){
             int z; cin >> z;
             if (freq[z]!=0){
                 best = 0;
-                break;
             }
             if (andx[z]!=0){
-                best = 1;
+                if (best > 1)
+                    best = 1;
             }
             int a = (x&z);
             if (freq[a]!=0){
-                best = 1;
+                if (best > 1)
+                    best = 1;
             }
             if (andx[a]!=0){
                 if (2 < best)
@@ -31,10 +31,6 @@ signed main(){
             andx[a]++;
             as[i] = a;
         }
-        for (int i=0; i<n;++i){
-            cout << as[i] << " ";
-        }
-        cout << endl;
         if (best == 10000){
             cout << -1 << endl;
         }
