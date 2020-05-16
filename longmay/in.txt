@@ -1,0 +1,6 @@
+1
+baaaaaaaaaaaaaaaaaaaaaaaaa
+caaaaaaaaaaaaaaaaaaaaaaaaa
+2
+a 5
+bc 1000
