@@ -46,88 +46,35 @@ int inverse(int n){
 	return power(n, MOD-2);
 }
 
-int query(vector<int> batches[], int low, int high){
-	vector<int> vals;
-	for (int i=low; i<=high; ++i){
-		for (int x: batches[i])
-			vals.pb(x);
-	}
-	cout << "? " << vals.size() << " ";
-	for (int x: vals){
-		cout << x << " ";
-	}
-	cout << endl;
-	int ret; cin >> ret;
-	return ret;
-}
-
 void solve(){
-	int n, k;
-	cin >> n >> k;
-	vector<int> batches[k+1];
-	vector<bool> ticked(n+1, 0);
-	for (int i=0; i<k; ++i){
-		int s; cin >> s;
-		for (int j=0; j<s; ++j){
-			int val; cin >> val;
-			batches[i].pb(val);
-			ticked[val] = 1;
-		}
+	int a, b;
+	cin >> a >> b;
+	if (a > 2*b || b > 2*a){
+		cout << min(a, b) << endl;
+		return;
 	}
-	for (int i=1; i<=n; ++i){
-		if (!ticked[i])
-			batches[k].pb(i);
+	if (a > b){
+		swap(a, b);
 	}
-	cout << "? " << n << " ";
-	for (int i=1; i<=n; ++i){
-		cout << i << " ";
+	int iter = b - a;
+	a = a - iter;
+	b = b - 2*iter;
+	int v = a/3;
+	iter += 2*v;
+	a -= 3*v;
+	if (a == 2){
+		iter++;
 	}
-	cout << endl;
-	int mx; cin >> mx;
-	int low = 0, high = k;
-	while (low < high){
-		int mid = (low + high)/2;
-		int val = query(batches, low, mid);
-		if (val != mx){
-			low = mid + 1;
-		}
-		else{
-			high = mid;
-		}
-	}
-	vector<int> sep;
-	for (int i=0; i<=k; ++i){
-		if (i==high) continue;
-		for (int z: batches[i])
-			sep.pb(z);
-	}
-	cout << "? " << sep.size() << " ";
-	for (int z: sep){
-		cout << z << " ";
-	}
-	cout << endl;
-	int vvv; cin >> vvv;
-	cout << "! ";
-	for (int i=0; i<k; ++i){
-		if (i == high){
-			cout << vvv << " ";
-		}
-		else {
-			cout << mx << " ";
-		}
-	}
-	cout << endl;
-
-	string res;
-	cin >> res;	
+	
+	cout << iter << endl;
 }
 
 
 signed main(){
 	cin.tie(NULL); ios_base::sync_with_stdio(false);
-	// #ifndef ONLINE_JUDGE
-	// freopen("input.txt", "r", stdin);
-	// #endif
+	#ifndef ONLINE_JUDGE
+	freopen("input.txt", "r", stdin);
+	#endif
 	int t; cin >> t;
 	for (int w=1; w<=t; ++w){
 		solve();

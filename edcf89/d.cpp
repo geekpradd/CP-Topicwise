@@ -1,5 +1,4 @@
 #include <bits/stdc++.h>
-#define int long long
 #define ii pair<int, int>
 #define pb push_back
 #define mp make_pair
@@ -46,91 +45,48 @@ int inverse(int n){
 	return power(n, MOD-2);
 }
 
-int query(vector<int> batches[], int low, int high){
-	vector<int> vals;
-	for (int i=low; i<=high; ++i){
-		for (int x: batches[i])
-			vals.pb(x);
-	}
-	cout << "? " << vals.size() << " ";
-	for (int x: vals){
-		cout << x << " ";
-	}
-	cout << endl;
-	int ret; cin >> ret;
-	return ret;
-}
-
 void solve(){
-	int n, k;
-	cin >> n >> k;
-	vector<int> batches[k+1];
-	vector<bool> ticked(n+1, 0);
-	for (int i=0; i<k; ++i){
-		int s; cin >> s;
-		for (int j=0; j<s; ++j){
-			int val; cin >> val;
-			batches[i].pb(val);
-			ticked[val] = 1;
+	vector<int> sieve(10000001, 0);
+	for (int i=2; i<=10000000; ++i){
+		if (sieve[i] != 0) continue;
+		for (int j=2*i; j<=10000000; j+=i)
+			sieve[j] = i;
+	}
+	int n; cin >> n;
+	ii ans[n];
+	for (int i=0; i<n; ++i){
+		int num; cin >> num;
+		if (sieve[num] == 0){
+			ans[i] = mp(-1, -1); continue;
 		}
-	}
-	for (int i=1; i<=n; ++i){
-		if (!ticked[i])
-			batches[k].pb(i);
-	}
-	cout << "? " << n << " ";
-	for (int i=1; i<=n; ++i){
-		cout << i << " ";
-	}
-	cout << endl;
-	int mx; cin >> mx;
-	int low = 0, high = k;
-	while (low < high){
-		int mid = (low + high)/2;
-		int val = query(batches, low, mid);
-		if (val != mx){
-			low = mid + 1;
+		int rest = num;
+		int div = sieve[num];
+		while (rest % div == 0){
+			rest = rest/div;
 		}
-		else{
-			high = mid;
-		}
-	}
-	vector<int> sep;
-	for (int i=0; i<=k; ++i){
-		if (i==high) continue;
-		for (int z: batches[i])
-			sep.pb(z);
-	}
-	cout << "? " << sep.size() << " ";
-	for (int z: sep){
-		cout << z << " ";
-	}
-	cout << endl;
-	int vvv; cin >> vvv;
-	cout << "! ";
-	for (int i=0; i<k; ++i){
-		if (i == high){
-			cout << vvv << " ";
+		if (rest == 1){
+			ans[i] = mp(-1, -1); continue;
 		}
 		else {
-			cout << mx << " ";
+			ans[i] = mp(rest, num/rest);
 		}
 	}
+	for (int i=0; i<n; ++i){
+		cout << ans[i].first << " ";
+	}
 	cout << endl;
-
-	string res;
-	cin >> res;	
+	for (int i=0; i<n; ++i){
+		cout << ans[i].second << " ";
+	}
+	cout << endl;
 }
 
 
 signed main(){
 	cin.tie(NULL); ios_base::sync_with_stdio(false);
-	// #ifndef ONLINE_JUDGE
-	// freopen("input.txt", "r", stdin);
-	// #endif
-	int t; cin >> t;
-	for (int w=1; w<=t; ++w){
-		solve();
-	}
+	#ifndef ONLINE_JUDGE
+	freopen("input.txt", "r", stdin);
+	#endif
+	solve();
 	return 0;
 }

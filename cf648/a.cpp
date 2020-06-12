@@ -46,88 +46,43 @@ int inverse(int n){
 	return power(n, MOD-2);
 }
 
-int query(vector<int> batches[], int low, int high){
-	vector<int> vals;
-	for (int i=low; i<=high; ++i){
-		for (int x: batches[i])
-			vals.pb(x);
-	}
-	cout << "? " << vals.size() << " ";
-	for (int x: vals){
-		cout << x << " ";
-	}
-	cout << endl;
-	int ret; cin >> ret;
-	return ret;
-}
-
 void solve(){
-	int n, k;
-	cin >> n >> k;
-	vector<int> batches[k+1];
-	vector<bool> ticked(n+1, 0);
-	for (int i=0; i<k; ++i){
-		int s; cin >> s;
-		for (int j=0; j<s; ++j){
-			int val; cin >> val;
-			batches[i].pb(val);
-			ticked[val] = 1;
+	int n, m; cin >> n >> m;
+	int grid[n][m];
+	for (int i=0; i<n; ++i){
+		for (int j=0; j<m; ++j)
+			cin >> grid[i][j];
+	}
+	int a = 0, b = 0;
+	for (int i=0; i<n; ++i){
+		int stat = 1;
+		for (int j=0; j<m; ++j){
+			if (grid[i][j])
+				stat = 0;
 		}
+		a += stat;
 	}
-	for (int i=1; i<=n; ++i){
-		if (!ticked[i])
-			batches[k].pb(i);
-	}
-	cout << "? " << n << " ";
-	for (int i=1; i<=n; ++i){
-		cout << i << " ";
-	}
-	cout << endl;
-	int mx; cin >> mx;
-	int low = 0, high = k;
-	while (low < high){
-		int mid = (low + high)/2;
-		int val = query(batches, low, mid);
-		if (val != mx){
-			low = mid + 1;
+	for (int j=0; j<m; ++j){
+		int stat = 1;
+		for (int i=0; i<n; ++i){
+			if (grid[i][j])
+				stat = 0;
 		}
-		else{
-			high = mid;
-		}
+		b += stat;
 	}
-	vector<int> sep;
-	for (int i=0; i<=k; ++i){
-		if (i==high) continue;
-		for (int z: batches[i])
-			sep.pb(z);
-	}
-	cout << "? " << sep.size() << " ";
-	for (int z: sep){
-		cout << z << " ";
-	}
-	cout << endl;
-	int vvv; cin >> vvv;
-	cout << "! ";
-	for (int i=0; i<k; ++i){
-		if (i == high){
-			cout << vvv << " ";
-		}
-		else {
-			cout << mx << " ";
-		}
-	}
-	cout << endl;
-
-	string res;
-	cin >> res;	
+	int moves = min(a, b);
+	if (moves %2)
+		cout << "Ashish" << endl;
+	else
+		cout << "Vivek" << endl;
 }
 
 
 signed main(){
 	cin.tie(NULL); ios_base::sync_with_stdio(false);
-	// #ifndef ONLINE_JUDGE
-	// freopen("input.txt", "r", stdin);
-	// #endif
+	#ifndef ONLINE_JUDGE
+	freopen("input.txt", "r", stdin);
+	#endif
 	int t; cin >> t;
 	for (int w=1; w<=t; ++w){
 		solve();

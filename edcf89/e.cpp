@@ -3,7 +3,7 @@
 #define ii pair<int, int>
 #define pb push_back
 #define mp make_pair
-#define MOD 1000000007
+#define MOD 998244353
 #define E9 1000000000
 #define d0(x) cout<<(x)<<" "
 #define d1(x) cout<<(x)<<endl
@@ -46,91 +46,81 @@ int inverse(int n){
 	return power(n, MOD-2);
 }
 
-int query(vector<int> batches[], int low, int high){
-	vector<int> vals;
-	for (int i=low; i<=high; ++i){
-		for (int x: batches[i])
-			vals.pb(x);
-	}
-	cout << "? " << vals.size() << " ";
-	for (int x: vals){
-		cout << x << " ";
-	}
-	cout << endl;
-	int ret; cin >> ret;
-	return ret;
-}
-
 void solve(){
-	int n, k;
-	cin >> n >> k;
-	vector<int> batches[k+1];
-	vector<bool> ticked(n+1, 0);
-	for (int i=0; i<k; ++i){
-		int s; cin >> s;
-		for (int j=0; j<s; ++j){
-			int val; cin >> val;
-			batches[i].pb(val);
-			ticked[val] = 1;
+	int n, m; cin >> n >> m;
+	int a[n];
+	for (int i=0; i<n; ++i){
+		cin >> a[i];
+	}
+	int b[m];
+	for (int i=0; i<m; ++i){
+		cin >> b[i];
+	}
+	bool pos = 1;
+	int j = m-1; 
+	vector<int> positions(m, -1);
+	vector<int> left(m, -1);
+	int min_so_far = 2*E9;
+	bool prev_done = false;
+	for (int i=n-1; i>=0; --i){
+		min_so_far = min(a[i], min_so_far);
+		if (j >= 0){
+			if (min_so_far < b[j]){
+				// cout << "At i " << i << endl;
+				// cout << " j " << j << endl;
+				// cout << min_so_far << endl;
+				pos = 0; break;
+			}
+		}
+		
+		if (j!= m-1 && !prev_done){
+			if (a[i] < b[j+1]){
+				prev_done = 1;
+				left[j+1] = i;
+			}
+		}
+		if (j >= 0){
+			if (min_so_far == b[j]){
+				positions[j] = i;
+				j--;
+				prev_done = 0;
+			}
+		}
+		
+		// if (j < 0) break;
+		
+	}
+	if (left[0] != -1){
+		pos = 0;
+	}
+	for (int i=0; i<m; ++i){
+		if (positions[i] == -1) {
+			pos = 0; break;
 		}
 	}
-	for (int i=1; i<=n; ++i){
-		if (!ticked[i])
-			batches[k].pb(i);
+	if (pos == 0){
+		cout << 0 << endl;
 	}
-	cout << "? " << n << " ";
-	for (int i=1; i<=n; ++i){
-		cout << i << " ";
-	}
-	cout << endl;
-	int mx; cin >> mx;
-	int low = 0, high = k;
-	while (low < high){
-		int mid = (low + high)/2;
-		int val = query(batches, low, mid);
-		if (val != mx){
-			low = mid + 1;
+	else{
+		int ans = 1;
+		for (int i=1; i<m; ++i){
+			ans = (ans*(positions[i]-left[i]))%MOD;
 		}
-		else{
-			high = mid;
-		}
+		cout << ans << endl;
 	}
-	vector<int> sep;
-	for (int i=0; i<=k; ++i){
-		if (i==high) continue;
-		for (int z: batches[i])
-			sep.pb(z);
-	}
-	cout << "? " << sep.size() << " ";
-	for (int z: sep){
-		cout << z << " ";
-	}
-	cout << endl;
-	int vvv; cin >> vvv;
-	cout << "! ";
-	for (int i=0; i<k; ++i){
-		if (i == high){
-			cout << vvv << " ";
-		}
-		else {
-			cout << mx << " ";
-		}
-	}
-	cout << endl;
 
-	string res;
-	cin >> res;	
+	// for (int i=0; i<m; ++i){
+	// 	cout << "pos " << i << " " <<positions[i] << endl;
+	// 	cout << "left " << left[i] << endl;
+	// }
 }
 
 
 signed main(){
 	cin.tie(NULL); ios_base::sync_with_stdio(false);
-	// #ifndef ONLINE_JUDGE
-	// freopen("input.txt", "r", stdin);
-	// #endif
-	int t; cin >> t;
-	for (int w=1; w<=t; ++w){
-		solve();
-	}
+	#ifndef ONLINE_JUDGE
+	freopen("input.txt", "r", stdin);
+	#endif
+	solve();
 	return 0;
 }
