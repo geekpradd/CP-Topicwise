@@ -1,94 +1,102 @@
 #include <bits/stdc++.h>
-#define ii pair<int, int>
-#define mp make_pair
-#define pb push_back
 using namespace std;
+#define ii pair<int, int>
+#define mp make_pair 
+
+template<class T> ostream& operator<<(ostream &os, vector<T> V) {
+    os << "[ ";
+    for(auto v : V) os << v << " ";
+    return os << "]";
+}
+
+pair<vector<int>, int > get_path(vector< vector<int> > &adj, int src, int target){
+	queue<ii> bfs;
+	bfs.push(mp(src, 0));
+	vector<ii> visited(target+1, mp(0, -1));
+
+	bool got = 0;
+	while (!bfs.empty()){
+		ii top = bfs.front();
+		bfs.pop();
+		
+		if (visited[top.first].first) continue;
+		visited[top.first].first = 1;
+		visited[top.first].second = top.second;
+
+		// cout << "visitinf " << top.first << " from " << top.second<< endl;
+		// cout << "target " << target << endl;
+		if (top.first == target){
+			got = 1; break;
+		}
+
+		for (int i=1; i<=target; ++i){
+			if (visited[i].first) continue;
+			if (adj[top.first][i] == 0) continue;
+
+			bfs.push(mp(i, top.first));
+		}
+	}
+	vector<int> path;
+	if (!got){
+		return mp(path, 0);
+	}
+	int cur = target;
+	int f = 1000000;
+	while (cur != src){
+		path.push_back(cur);
+		f = min(f, adj[visited[cur].second][cur]);
+		cur = visited[cur].second;
+	}
+	path.push_back(src);
+
+	return mp(path,f);
+}
+
 
 signed main(){
 	int n, m; cin >> n >> m;
-	vector<ii> adj[n+m+2];
+	vector< vector<int> >  adj(n+m+2, vector<int>(n+m+2, 0));
+	vector< vector<int> > copied(n+m+2, vector<int>(n+m+2, 0));
 	for (int i=1; i<=n; ++i){
-		for (int j=1; j<=m; ++j){
-			int yes; cin >> yes;
-			if (yes){
-				adj[j].pb(mp(m+i, 1));
-				adj[m+i].pb(mp(j, 0));
-			}
+		adj[0][i] = 1;
+		for (int j=n+1; j<=n+m; ++j){
+			cin >> adj[i][j];
+			copied[i][j] = adj[i][j];
+			if (i==1) adj[j][n+m+1] = 1;
 		}
 	}
-	for (int i=1; i<=m; ++i){
-		adj[0].pb(mp(i, 1));
-		adj[i].pb(mp(0, 0));
-	}
-	for (int i=1; i<=n; ++i){
-		adj[m+i].pb(mp(m+n+1, 1));
-		adj[m+n+1].pb(mp(m+i, 0));
-	}
+	int source = 0, target = n + m + 1;
+
 	int flow = 0;
-	vector<int> path;
-	bool got = false;
-	int l = 0;
-	do {
-		vector<int> prev(n+m+2, 0);
-		queue<ii> bfs; 
-		got = false;
-		bfs.push(mp(0, 0));
-		while (!bfs.empty()){
-			ii cur = bfs.front();
-			bfs.pop();
-			int v = cur.first; int p = cur.second;
-			cout << "at " << v << endl;
-			if (prev[v] == 0){
-				prev[v] = p;
-			}
-			else {
-				continue;
-			}
-			if (v == n+m+1) {
-				got = true; break;
-			}
-			for (ii to: adj[v]){
-				if (!to.second) continue;
-				if (prev[to.first]) continue;
-				// cout << "going to " << to.first << " from " << v << endl;
-				bfs.push(mp(to.first, v));
-			}
+	pair<vector<int>, int> path = get_path(adj, source, target);
+
+	while (path.first.size()){
+		flow += path.second;
+		// cout << path.first << endl;
+		for (int i=path.first.size()-1; i>0; --i){
+			adj[path.first[i]][path.first[i-1]] -= path.second;
+			adj[path.first[i-1]][path.first[i]] += path.second;
 		}
-		if (got){
-			flow++;
-			int cur = n+m+1;
-			// cout << "starting reverse " << endl;
-			while (cur != 0){
-				// cout << "at " << cur << endl;
-				for (int i = 0; i<adj[prev[cur]].size(); ++i){
-					if (adj[prev[cur]][i].first == cur){
-						adj[prev[cur]][i].second = 0;
-					}
-				}
-				for (int i = 0; i<adj[cur].size(); ++i){
-					if (adj[cur][i].first == prev[cur]){
-						adj[cur][i].second = 0;
-					}
-				}
-				cur = prev[cur];
-			}
-		}
-		l++;
+
+
+		path = get_path(adj, source, target);
 
 	}
-	while (got);
 
-	vector<int> ans(m+1, -1);
-	for (int i=1;i<=n; ++i){
-		for (ii to: adj[m+i]){
-			if (to.second == 0 && to.first != m+n+1){
-				ans[i] = to.first;
+	vector<int> ans(n+1, -1);
+	for (int i=1; i<=n; ++i){
+		for (int j=n+1; j<=n+m; ++j){
+			if (adj[i][j] != copied[i][j]){
+				ans[i] = j - n; break;
 			}
 		}
 	}
-	cout << flow << endl;
 	for (int i=1; i<=n; ++i){
 		cout << ans[i] << " ";
 	}
+
 	cout << endl;
+	// cout << flow << endl;
+	return 0;
+
 }
