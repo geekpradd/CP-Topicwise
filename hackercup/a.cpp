@@ -54,30 +54,88 @@ int inverse(int n){
 }
 
 
-
 void solve(){
-	int m, d, w; cin >> m >> d >> w;
-	int gc = __gcd(w, d-1);
-	w /= gc;
-	int u = min(d, m);
+	int n, k; cin >> n >> k;
+	vector<int> s(n);
+	vector<int> x(n);
+	vector<int> y(n);
 
-	int last = u%w;
-	int l_val = u/w;
-	int f = w*(l_val*(l_val - 1))/2;
-	f += last*l_val;
+	int total = 0;
+	for (int i=0; i<k; ++i){
+		cin >> s[i];
+		total += s[i];
+	}
+	int a, b, c, d; cin >> a >> b >> c >> d;
+	int ps = s[k-1], pps = s[k-2];
 
-	cout << f<< endl;
+
+	for (int i=k; i<n; ++i){
+		s[i] = (a*pps + b*ps + c)%d;
+		pps = ps;
+		ps = s[i];
+		total += s[i];
+	}
+	int low = 0;
+	int lower = 0;
+	for (int i=0; i<k; ++i){
+		cin >> x[i];
+		low += x[i];
+		if (s[i] < x[i]){
+			lower += x[i]-s[i];
+		}
+	}
+	cin >> a >> b >> c >> d;
+	ps = x[k-1], pps = x[k-2];
+
+	for (int i=k; i<n; ++i){
+		x[i] = (a*pps + b*ps + c)%d;
+		pps = ps;
+		ps = x[i];
+		low += x[i];
+		if (s[i] < x[i]){
+			lower += x[i]-s[i];
+		}
+	}
+	int high = 0;
+	int upper = 0;
+	for (int i=0; i<k; ++i){
+		cin >> y[i];
+		high += y[i]+x[i];
+		if (s[i] > y[i]+x[i]){
+			upper += s[i]-y[i]-x[i];
+		}
+	}
+	cin >> a >> b >> c >> d;
+	ps = y[k-1], pps = y[k-2];
+
+	for (int i=k; i<n; ++i){
+		y[i] = (a*pps + b*ps + c)%d;
+		pps = ps;
+		ps = y[i];
+		high += y[i]+x[i];
+		if (s[i] > y[i]+x[i]){
+			upper += s[i]-y[i]-x[i];
+		}
+	}
+
+	if (total < low || total > high){
+		cout << -1 << endl;
+		return;
+	}
+
+	cout << max(upper, lower) << endl;	
+
+
 }
 
 signed main(){
 	cin.tie(NULL); ios_base::sync_with_stdio(false);
-	#ifndef ONLINE_JUDGE
-	freopen("input.txt", "r", stdin);
-	#endif
+	// #ifndef ONLINE_JUDGE
+	// freopen("input.txt", "r", stdin);
+	// #endif
 	int t; cin >> t;
-	while (t--){
+	for (int i=1; i<=t; ++i){
+		cout << "Case #" << i << ": ";
 		solve();
 	}
-	
-	return 0;
 }

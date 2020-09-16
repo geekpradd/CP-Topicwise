@@ -52,21 +52,79 @@ int power(int base, int exp){
 int inverse(int n){
 	return power(n, MOD-2);
 }
+bool other(vector<int> a, int n){
+	int sum = 0;
+	for (int i=0; i<n; ++i){
+		cin >> a[i];
+		sum += a[i];
+	} 
+	bool t = 0;
+	for (int i=0; i<n; ++i){
+		if (2*a[i] > sum){
+			t = 1;
+		}
+	}
+	if (t == 1){
+		return 1;
+	}
+	else if (sum%2){
+		return 1;
+	}
+	else {
+		return 0;
+	}
+}
+bool state(vector<int> a, int pos, int n){
+	if (pos != -1){
+		a[pos]--;
+	}
+	int zer = 0;
+	for (int i=0; i<n; ++i){
+		if (a[i] == 0){
+			zer++;
+		}
+	}
+	if (zer >= n-1){
+		return true;
+	}
+	bool st = false;
+	for (int i=0; i<n; ++i){
+		if (a[i]!=0){
+			if (state(a, i, n) == false){
+				st = true;
+			}
+		}
+	}
 
-
+	return st;
+}
 
 void solve(){
-	int m, d, w; cin >> m >> d >> w;
-	int gc = __gcd(w, d-1);
-	w /= gc;
-	int u = min(d, m);
+	vector<int> a(3);
+	bool pos = 1;
+	for (int i=0; i<10; ++i){
+		for (int j=0; j<10; ++j){
+			
+			for (int k=0; k<10;++k){
+				a[0] = i;
+				a[1] = j;
+				a[2] = k;
+				if (state(a, -1, 3) != other(a, 3)){
+					cout << "failed" << endl;
+					cout << a << endl;
+					pos = 0;
+					break;
+				}
+			}
+			if (!pos){
+				break;
+			}
+		}
+		if (!pos){
+			break;
+		}
+	}
 
-	int last = u%w;
-	int l_val = u/w;
-	int f = w*(l_val*(l_val - 1))/2;
-	f += last*l_val;
-
-	cout << f<< endl;
 }
 
 signed main(){

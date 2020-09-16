@@ -1,3 +1,4 @@
+
 #include <bits/stdc++.h>
 #include <ctime>
 #include <cstdlib>
@@ -53,20 +54,36 @@ int inverse(int n){
 	return power(n, MOD-2);
 }
 
-
-
 void solve(){
-	int m, d, w; cin >> m >> d >> w;
-	int gc = __gcd(w, d-1);
-	w /= gc;
-	int u = min(d, m);
+	int n; cin >> n;
+	vector<int> f(101, 0);
+	for (int i=0; i<n; ++i){
+		int x; cin >> x;
+		f[x]++;
+	}
 
-	int last = u%w;
-	int l_val = u/w;
-	int f = w*(l_val*(l_val - 1))/2;
-	f += last*l_val;
+	int ans = 0;
+	int got = 0;
+	for (int i=0; i<=100; ++i){
+		if (f[i] == 0){
+			if (got == 0){
+				ans += 2*i;
+			}
+			else {
+				ans += i;
+			}
+			break;
+		}
+		else if (f[i] == 1){
+			if (got == 0){
+				got++;
+				ans += i;
+			}
+			
+		}
+	}
+	cout << ans << endl;
 
-	cout << f<< endl;
 }
 
 signed main(){

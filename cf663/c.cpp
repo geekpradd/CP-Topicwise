@@ -54,19 +54,17 @@ int inverse(int n){
 }
 
 
-
 void solve(){
-	int m, d, w; cin >> m >> d >> w;
-	int gc = __gcd(w, d-1);
-	w /= gc;
-	int u = min(d, m);
+	int n; cin >> n;
+	int sec = power(2, n-1);
+	int f = 1;
+	for (int i=1; i<=n; ++i){
+		f = (f*i)%MOD;
+	}
+	int ans = f - sec;
+	if (ans < 0) ans += MOD;
 
-	int last = u%w;
-	int l_val = u/w;
-	int f = w*(l_val*(l_val - 1))/2;
-	f += last*l_val;
-
-	cout << f<< endl;
+	d1(ans);
 }
 
 signed main(){
@@ -74,10 +72,5 @@ signed main(){
 	#ifndef ONLINE_JUDGE
 	freopen("input.txt", "r", stdin);
 	#endif
-	int t; cin >> t;
-	while (t--){
-		solve();
-	}
-	
-	return 0;
+	solve();
 }

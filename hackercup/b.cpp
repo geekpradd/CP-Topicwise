@@ -52,32 +52,59 @@ int power(int base, int exp){
 int inverse(int n){
 	return power(n, MOD-2);
 }
-
-
+#define ld long double
 
 void solve(){
-	int m, d, w; cin >> m >> d >> w;
-	int gc = __gcd(w, d-1);
-	w /= gc;
-	int u = min(d, m);
+	int n; cin >> n;
+	ld p; cin >> p;
 
-	int last = u%w;
-	int l_val = u/w;
-	int f = w*(l_val*(l_val - 1))/2;
-	f += last*l_val;
+	vector< vector<ld> > s(n, vector<ld>(n+1, 1.0));
+	vector< vector<ld> > ps(n, vector<ld>(n+1, 1.0));
+	vector< vector<ld> > pref(n, vector<ld>(n+1, 1.0));
+	for (int i=2; i<=n; ++i){
+		pref[0][i] = s[0][i] + pref[0][i-1];
+	}
+	for (int d=0; d<n; ++d){
+		s[d][0] = ps[d][0] = pref[d][0] = 0;
+	}
 
-	cout << f<< endl;
+	for (int d=1; d<n; ++d){
+		for (int i=1; i<=n; ++i){
+			int large = (n-d+1)*(n-d);
+			ld bot = large;
+			bot = 2.0/bot;
+			ld num = p*(pref[d-1][n] - pref[d-1][i]) + (1-p)*(pref[d-1][i-1]);
+			ps[d][i] = s[d-1][i]*(bot*num);
+			s[d][i] = (1-ps[d][i])*s[d-1][i];
+			if (i == 1)
+				pref[d][i] = s[d][i];
+			else
+				pref[d][i] = s[d][i] + pref[d][i-1];
+		}
+	}
+	cout << s << endl;
+	cout << ps << endl;
+	cout << pref << endl;
+	for (int i=1; i<=n; ++i){
+		ld ans = 0;
+		ld main = 1;
+		for (int d=1; d<n; ++d){
+			ans = ans + (d)*ps[d][i];
+			main = main - ps[d][i];
+		}
+		ans = ans + (n-1)*main;
+		cout << ans << endl;
+	}
 }
 
 signed main(){
 	cin.tie(NULL); ios_base::sync_with_stdio(false);
-	#ifndef ONLINE_JUDGE
-	freopen("input.txt", "r", stdin);
-	#endif
+	// #ifndef ONLINE_JUDGE
+	// freopen("input.txt", "r", stdin);
+	// #endif
 	int t; cin >> t;
-	while (t--){
+	for (int i=1; i<=t; ++i){
+		cout << "Case #" << i << ": " << endl;
 		solve();
 	}
-	
-	return 0;
 }

@@ -1,3 +1,4 @@
+
 #include <bits/stdc++.h>
 #include <ctime>
 #include <cstdlib>
@@ -53,31 +54,51 @@ int inverse(int n){
 	return power(n, MOD-2);
 }
 
-
-
 void solve(){
-	int m, d, w; cin >> m >> d >> w;
-	int gc = __gcd(w, d-1);
-	w /= gc;
-	int u = min(d, m);
+	int n; cin >> n;
+	vector<int> a(n, -1);
+	int x = 0;
+	for (int i=1; i<=n; ++i) x = x^i;
+	int j = 1;
+	for (int i=0; i<n; ++i){
+		if (a[i] != -1) continue;
+		if (i == j) j++;
+		if (j >= n){
+			for (int k=0; k<n; ++k){
+				if (k!=i)
+					x = x^a[k];
+			}
+			a[i] = x;
+			break;
+		}
+		cout << "? " << (i+1) << " " << j+1 << endl;
+		int f; cin >> f;
+		cout << "? " << (j+1) << " " << i+1 << endl;
+		int s; cin >> s;
+		if (f < s){
+			a[j] = s;
+			j++;
+			i--;
+		}
+		else {
+			a[i] = f;
+		}
+	}
 
-	int last = u%w;
-	int l_val = u/w;
-	int f = w*(l_val*(l_val - 1))/2;
-	f += last*l_val;
+	cout << "! ";
+	for (int i=0; i<n; ++i){
+		cout << a[i] << " ";
+	}
+	cout << endl;
 
-	cout << f<< endl;
 }
 
 signed main(){
 	cin.tie(NULL); ios_base::sync_with_stdio(false);
-	#ifndef ONLINE_JUDGE
-	freopen("input.txt", "r", stdin);
-	#endif
-	int t; cin >> t;
-	while (t--){
-		solve();
-	}
+	// #ifndef ONLINE_JUDGE
+	// freopen("input.txt", "r", stdin);
+	// #endif
+	solve();
 	
 	return 0;
 }

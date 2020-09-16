@@ -53,27 +53,63 @@ int inverse(int n){
 	return power(n, MOD-2);
 }
 
-
+bool state(vector<int> a, int pos, int n){
+	if (pos != -1){
+		a[pos]--;
+	}
+	int zer = 0;
+	for (int i=0; i<n; ++i){
+		if (a[i] == 0){
+			zer++;
+		}
+	}
+	if (zer >= n-1){
+		return true;
+	}
+	bool st = false;
+	for (int i=0; i<n; ++i){
+		if (a[i]!=0 && i!=pos){
+			if (state(a, i, n) == false){
+				st = true;
+			}
+		}
+	}
+	cout << "State " << a << " value " << st << endl;
+	return st;
+}
 
 void solve(){
-	int m, d, w; cin >> m >> d >> w;
-	int gc = __gcd(w, d-1);
-	w /= gc;
-	int u = min(d, m);
+	int n; cin >> n;
+	vector<int> a(n);
+	int sum = 0;
+	for (int i=0; i<n; ++i){
+		cin >> a[i];
+		sum += a[i];
+	} 
+	bool t = 0;
+	for (int i=0; i<n; ++i){
+		if (2*a[i] > sum){
+			t = 1;
+		}
+	}
+	if (t == 1){
+		cout << "T" << endl;
+	}
+	else if (sum%2){
+		cout << "T" << endl;
+	}
+	else {
+		cout << "HL" << endl;
+	}
 
-	int last = u%w;
-	int l_val = u/w;
-	int f = w*(l_val*(l_val - 1))/2;
-	f += last*l_val;
-
-	cout << f<< endl;
+	
 }
 
 signed main(){
 	cin.tie(NULL); ios_base::sync_with_stdio(false);
-	#ifndef ONLINE_JUDGE
-	freopen("input.txt", "r", stdin);
-	#endif
+	// #ifndef ONLINE_JUDGE
+	// freopen("input.txt", "r", stdin);
+	// #endif
 	int t; cin >> t;
 	while (t--){
 		solve();

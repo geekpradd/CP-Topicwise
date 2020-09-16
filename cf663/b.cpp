@@ -54,19 +54,29 @@ int inverse(int n){
 }
 
 
-
 void solve(){
-	int m, d, w; cin >> m >> d >> w;
-	int gc = __gcd(w, d-1);
-	w /= gc;
-	int u = min(d, m);
+	int n, m; cin >> n >> m;
+	int grid[n][m];
+	for (int i=0; i<n; ++i){
+		for (int j=0; j<m; ++j){
+			char s;
+			cin >> s;
+			if (s=='D') grid[i][j] = 0;
+			else
+				grid[i][j] = 1;
+		}
+	}
+	int tot = 0;
+	for (int i=0; i<n-1; ++i){
+		if (grid[i][m-1] == 1)
+			tot++;
+	}
+	for (int i=0; i<m-1; ++i){
+		if (grid[n-1][i] == 0)
+			tot++;
+	}
+	d1(tot);
 
-	int last = u%w;
-	int l_val = u/w;
-	int f = w*(l_val*(l_val - 1))/2;
-	f += last*l_val;
-
-	cout << f<< endl;
 }
 
 signed main(){
@@ -78,6 +88,4 @@ signed main(){
 	while (t--){
 		solve();
 	}
-	
-	return 0;
 }

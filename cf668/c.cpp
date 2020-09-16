@@ -1,3 +1,4 @@
+
 #include <bits/stdc++.h>
 #include <ctime>
 #include <cstdlib>
@@ -53,20 +54,74 @@ int inverse(int n){
 	return power(n, MOD-2);
 }
 
-
-
 void solve(){
-	int m, d, w; cin >> m >> d >> w;
-	int gc = __gcd(w, d-1);
-	w /= gc;
-	int u = min(d, m);
+	int n, k; cin >> n >> k ;
+	string s; cin >> s;
+	bool pos = 1;
+	int z = 0, o = 0;
+	int q = 0;
+	int qz = 0, qo = 0;
+	for (int i=0; i<k; ++i){
+		if (s[i]=='0') z++;
+		else if (s[i]=='1') o++;
+		else q++;
+	}
+	int l = k/2;
+	if (l < z|| l <o) pos = 0;
+	else {
+		qz = (l-z); qo = (l-o);
+	}
+	int prev_q = q;
+	for (int i=k; i<n; ++i){
+		
 
-	int last = u%w;
-	int l_val = u/w;
-	int f = w*(l_val*(l_val - 1))/2;
-	f += last*l_val;
+		if (s[i] == s[i-k]) {
 
-	cout << f<< endl;
+		}
+		else if (s[i] == '?'){
+			s[i] = s[i-k];
+		}
+		else if (s[i-k] == '?'){
+			if (s[i] == '1'){
+				if (qo == 0){
+					pos = 0; break;
+				}
+			}
+			if (s[i] == '0'){
+				if (qz == 0){
+					pos = 0; break;
+				}
+			}
+		}
+		else {
+			pos = 0; break;
+		}
+
+		if (s[i-k]=='0') z--;
+		else if (s[i-k]=='1') o--;
+		else q--;
+
+		if (s[i]=='0') z++;
+		else if (s[i]=='1') o++;
+		else q++;
+
+		if (l < z|| l <o) {
+			pos = 0;
+			break;
+		}
+		else {
+			qz = (l-z); qo = (l-o);
+		}
+		
+
+	}
+
+	if (pos){
+		cout << "YES" << endl;
+	}
+	else{
+		cout << "NO" << endl;
+	}
 }
 
 signed main(){

@@ -53,20 +53,51 @@ int inverse(int n){
 	return power(n, MOD-2);
 }
 
-
-
 void solve(){
-	int m, d, w; cin >> m >> d >> w;
-	int gc = __gcd(w, d-1);
-	w /= gc;
-	int u = min(d, m);
-
-	int last = u%w;
-	int l_val = u/w;
-	int f = w*(l_val*(l_val - 1))/2;
-	f += last*l_val;
-
-	cout << f<< endl;
+	int n; cin >> n;
+	int a[n+1];
+	for (int i=1; i<=n; ++i){
+		cin >> a[i];
+	}
+	vector< vector<int> >  pref(n+1, vector<int>(n+1, 0));
+	for (int i=1; i<=n; ++i){
+		pref[i][a[i]] = 1 + pref[i-1][a[i]];
+		for (int j=1; j<=n; ++j){
+			if (j == a[i]) continue;
+			pref[i][j] = pref[i-1][j];
+		}
+	}
+	// cout << pref[3][1] << endl;
+	// cout << pref[1][1] << endl;
+	vector< vector<int> >  pairs(n+1, vector<int>(n+1, 0));
+	for (int i=1; i<=n; ++i){
+		for (int j=i+1; j<=n; ++j){
+			int current = pref[j-1][a[j]] - pref[i-1][a[j]];
+			pairs[i][j] = current + pairs[i][j-1];
+				// DUMP(i);
+				// DUMP(j);
+				// DUMP(pairs[i][j]);
+		}
+	}
+	int ans = 0;
+	vector<int>  count(n+1, 0);
+	for (int i=1; i<=n; ++i){
+		int found = 0;
+		for (int k=1; k<i; ++k){
+			if (a[k]!=a[i]) continue;
+			found++;
+			int total = count[i-1] - count[k];
+			// DUMP(i);
+			// DUMP(k);
+			// DUMP(total);
+			total -= pairs[k][i-1];
+			// cout << "now" << endl;
+			// DUMP(total);
+			ans += total;
+		}
+		count[i] = count[i-1] + found;
+	}
+	d1(ans);
 }
 
 signed main(){

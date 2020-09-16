@@ -53,20 +53,119 @@ int inverse(int n){
 	return power(n, MOD-2);
 }
 
-
-
 void solve(){
-	int m, d, w; cin >> m >> d >> w;
-	int gc = __gcd(w, d-1);
-	w /= gc;
-	int u = min(d, m);
+	int n;
+	cin >> n;
+	int a[n];
+	vector<int> freq(100001, 0);
+	int n4 = 0, n2 = 0, n8 = 0, n6 = 0;
+	for (int i=0; i<n; ++i){
+		cin >> a[i];
+		freq[a[i]]++;
+	}
+	for (int i=1; i<=100000; ++i){
+		if (freq[i]>=8){
+			n8++;
+		}
+		else if (freq[i] >= 6){
+			n6++;
+		}
+		else if (freq[i] >= 4){
+			n4++;
+		}
+		else if (freq[i] >= 2){
+			n2++;
+		}
+	}
+	int q; cin >> q;
+	while (q--){
+		char op; cin >> op; int num; cin >> num; 
+		if (op == '+'){
+			int i = num;
+			if (freq[i]>=8){
+				n8--;
+			}
+			else if (freq[i] >= 6){
+				n6--;
+			}
+			else if (freq[i] >= 4){
+				n4--;
+			}
+			else if (freq[i] >= 2){
+				n2--;
+			}
+			freq[i]++;
+			if (freq[i]>=8){
+				n8++;
+			}
+			else if (freq[i] >= 6){
+				n6++;
+			}
+			else if (freq[i] >= 4){
+				n4++;
+			}
+			else if (freq[i] >= 2){
+				n2++;
+			}
+		}
+		else {
+			int i = num;
+			if (freq[i]>=8){
+				n8--;
+			}
+			else if (freq[i] >= 6){
+				n6--;
+			}
+			else if (freq[i] >= 4){
+				n4--;
+			}
+			else if (freq[i] >= 2){
+				n2--;
+			}
+			freq[i]--;
+			if (freq[i]>=8){
+				n8++;
+			}
+			else if (freq[i] >= 6){
+				n6++;
+			}
+			else if (freq[i] >= 4){
+				n4++;
+			}
+			else if (freq[i] >= 2){
+				n2++;
+			}
+		}
+		if (n8 > 0){
+			d1("YES");
+		}
+		else if (n6 > 1){
+			d1("YES");
+		}
+		else if (n6 == 1) {
+			if (n2 > 0 || n4 > 0){
+				d1("YES");
+			}
+			else {
+				d1("NO");
+			}
+		}
+		else if (n4 > 1){
+			d1("YES");
+		}
+		else if (n4 == 1){
+			if (n2 > 1){
+				d1("YES");
+			}
+			else {
+				d1("NO");
+			}
+		}
+		else {
+			d1("NO");
+		}
+	}
 
-	int last = u%w;
-	int l_val = u/w;
-	int f = w*(l_val*(l_val - 1))/2;
-	f += last*l_val;
-
-	cout << f<< endl;
 }
 
 signed main(){
@@ -74,10 +173,5 @@ signed main(){
 	#ifndef ONLINE_JUDGE
 	freopen("input.txt", "r", stdin);
 	#endif
-	int t; cin >> t;
-	while (t--){
-		solve();
-	}
-	
-	return 0;
+	solve();
 }

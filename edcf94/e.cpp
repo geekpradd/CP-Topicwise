@@ -53,20 +53,83 @@ int inverse(int n){
 	return power(n, MOD-2);
 }
 
+int re(vector<int> &v){
+	if (v.size() == 1){
+		return 1;
+	}
+	if (v.size() == 0){
+		return 0;
+	}
+	int mx = E13;
+	int mi = -1;
+	for (int i=0; i<v.size(); ++i){
+		if (v[i] < mx){
+			mx = v[i];
+			mi = i;
+		}
+	}
+	vector<int> cp = v;
+	for (int i=0; i<v.size(); ++i){
+		cp[i] -= mx;
+	}
+	vector< vector<int> > vals;
+	vector<int> cur;
+	for (int i=0; i<v.size(); ++i){
+		int vx; vx = cp[i];
+		if (vx == 0){
+			if (cur.size()){
+				vals.push_back(cur);
+				vector<int> nn;
+				cur = nn;
+			}
+		}
+		else {
+			cur.pb(vx);
+		}
+	}
+	if (cur.size()){
+		vals.push_back(cur);
+	}
 
+	int ans = 1;
+	for (vector<int> &g: vals){
+		ans += re(g);
+	}
+
+	for (int i=0; i<v.size(); ++i){
+		vector<int> left(v.begin(), v.begin()+i);
+		vector<int> right(v.begin()+i+1, v.end());
+		int cur_ans = 1 + re(left) + re(right);
+		ans = min(ans, cur_ans);
+	}
+	return ans;
+}
 
 void solve(){
-	int m, d, w; cin >> m >> d >> w;
-	int gc = __gcd(w, d-1);
-	w /= gc;
-	int u = min(d, m);
-
-	int last = u%w;
-	int l_val = u/w;
-	int f = w*(l_val*(l_val - 1))/2;
-	f += last*l_val;
-
-	cout << f<< endl;
+	int n; cin >> n;
+	vector< vector<int> > vals;
+	vector<int> cur;
+	for (int i=0; i<n; ++i){
+		int v; cin >> v;
+		if (v == 0){
+			if (cur.size()){
+				vals.push_back(cur);
+				vector<int> nn;
+				cur = nn;
+			}
+		}
+		else {
+			cur.pb(v);
+		}
+	}
+	if (cur.size()){
+		vals.push_back(cur);
+	}
+	int ans = 0;
+	for (int i=0; i<vals.size(); ++i){
+		ans += re(vals[i]);
+	}
+	d1(ans);
 }
 
 signed main(){
@@ -74,10 +137,7 @@ signed main(){
 	#ifndef ONLINE_JUDGE
 	freopen("input.txt", "r", stdin);
 	#endif
-	int t; cin >> t;
-	while (t--){
-		solve();
-	}
+	solve();
 	
 	return 0;
 }

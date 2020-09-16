@@ -53,20 +53,57 @@ int inverse(int n){
 	return power(n, MOD-2);
 }
 
-
-
 void solve(){
-	int m, d, w; cin >> m >> d >> w;
-	int gc = __gcd(w, d-1);
-	w /= gc;
-	int u = min(d, m);
+	int n, m; cin >> n >> m;
+	vector< vector<char> > grid(n, vector<char>(m));
+	vector< vector<int> > l(n, vector<int>(m));
 
-	int last = u%w;
-	int l_val = u/w;
-	int f = w*(l_val*(l_val - 1))/2;
-	f += last*l_val;
+	for (int i=0; i<n; ++i){
+		for (int j=0; j<m; ++j){
+			cin >> grid[i][j];
+			l[i][j] = 0;
+		}
+	}
 
-	cout << f<< endl;
+	vector< vector<int> > c(n, vector<int>(m));
+	int tot = 0;
+	for (int i=0; i<n; ++i){
+		for (int j=0; j<m; ++j){
+			if (i == 0){
+				l[i][j] = 1;
+			}
+			else {
+				if (grid[i][j] == grid[i-1][j])
+					l[i][j] = 1 + l[i-1][j];
+				else
+					l[i][j] = 1;
+			}
+			int cap = (l[i][j]+1)/2;
+			if (j == 0 || j == m-1){
+				c[i][j] = 1; tot++;
+			}
+			else if (i == 0){
+				c[i][j] = 1; tot++;
+			}
+			else {
+				if (grid[i-1][j-1] == grid[i][j] && grid[i-1][j+1] == grid[i][j]){
+					int pos = min(c[i-1][j-1], c[i-1][j+1]);
+					if (pos < cap){
+						c[i][j] = pos+1;
+						tot += c[i][j];
+					}
+					else {
+						c[i][j] = cap;
+						tot += c[i][j];
+					}
+				}
+				else {
+					c[i][j] = 1; tot++;
+				}
+			}
+		}
+	}
+	cout << tot << endl;
 }
 
 signed main(){
@@ -74,10 +111,5 @@ signed main(){
 	#ifndef ONLINE_JUDGE
 	freopen("input.txt", "r", stdin);
 	#endif
-	int t; cin >> t;
-	while (t--){
-		solve();
-	}
-	
-	return 0;
+	solve();
 }

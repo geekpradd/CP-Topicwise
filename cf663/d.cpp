@@ -1,7 +1,6 @@
 #include <bits/stdc++.h>
 #include <ctime>
 #include <cstdlib>
-#define int long long
 #define ii pair<int, int>
 #define pb push_back
 #define mp make_pair
@@ -54,19 +53,63 @@ int inverse(int n){
 }
 
 
-
 void solve(){
-	int m, d, w; cin >> m >> d >> w;
-	int gc = __gcd(w, d-1);
-	w /= gc;
-	int u = min(d, m);
+	int n, m; cin >> n >> m;
+	int mi = min(n, m);
+	int **final = new int*[n];
+	REP0(i, n){
+		final[i] = new int[m];
+		REP0(j, m){
+			char in; cin >> in; 
+			final[i][j] = (in - '0');
+		}
+	}
+	if (mi >= 4){
+		d1(-1);
+		return;
+	}
+	
+	if (n == 1){
+		cout << 0 << endl; return;
+	}
+	if (n == 2){
+		int states[m];
+		states[m-1] = 0;
+		for (int i=0; i<m-1; ++i){
+			int value = final[0][i] + final[1][i] + final[0][i+1] + final[1][i+1];
+			states[i] = (value)%2;
+		}
+		int dp[m][2];
+		dp[m-1][0] = dp[m-1][1] = 0;
+		for (int i=m-2; i>=0; --i){
+			int correct = states[i+1];
+			dp[i][1] = dp[i+1][correct];
+			dp[i][0] = 1 + min(dp[i+1][0], dp[i+1][1]);
+		}
+		cout << dp[0][states[0]] << endl;
+	}
+	else  {
+		int states[2][m];
+		states[0][m-1] = states[1][m-1] = 0;
+		for (int i=0; i<m-1; ++i){
+			int value = final[0][i] + final[1][i] + final[0][i+1] + final[1][i+1];
+			states[0][i] = (value)%2;
+			value = final[1][i] + final[2][i] + final[1][i+1] + final[2][i+1];
+			states[1][i] = (value)%2;
+		}
+		int dp[4][m];
+		dp[0][m-1]  = dp[1][m-1] = dp[2][m-1] = dp[3][m-1] = 0;
+		for (int i=m-2; i>=0; --i){
+			int state_future = 2*states[1][i+1] + states[0][i+1];
+			dp[3][i] = dp[state_future][i+1];
+			dp[2][i] = 1 + min(dp[state_future][i+1], dp[(state_future ^ 1)][i+1]);
+			dp[1][i] = 1 + min(dp[state_future][i+1], dp[(state_future ^ 2)][i+1]);
+			dp[0][i] = 1 + min(dp[state_future][i+1], dp[(state_future ^ 3)][i+1]);
+		}
+		int initial = 2*states[1][0] + states[0][0];
+		cout << dp[initial][0] << endl;
+	}
 
-	int last = u%w;
-	int l_val = u/w;
-	int f = w*(l_val*(l_val - 1))/2;
-	f += last*l_val;
-
-	cout << f<< endl;
 }
 
 signed main(){
@@ -74,10 +117,5 @@ signed main(){
 	#ifndef ONLINE_JUDGE
 	freopen("input.txt", "r", stdin);
 	#endif
-	int t; cin >> t;
-	while (t--){
-		solve();
-	}
-	
-	return 0;
+	solve();
 }

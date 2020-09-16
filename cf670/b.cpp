@@ -1,3 +1,4 @@
+
 #include <bits/stdc++.h>
 #include <ctime>
 #include <cstdlib>
@@ -53,20 +54,72 @@ int inverse(int n){
 	return power(n, MOD-2);
 }
 
-
-
 void solve(){
-	int m, d, w; cin >> m >> d >> w;
-	int gc = __gcd(w, d-1);
-	w /= gc;
-	int u = min(d, m);
+	int n; cin >> n;
+	vector<int> p, ne;
+	for (int i=0; i<n; ++i){
+		int x; cin >> x;
+		if (x >= 0){
+			p.pb(x);
+		}
+		else {
+			ne.pb(x);
+		}
+	}
+	sort(p.begin(), p.end());
+	sort(ne.begin(), ne.end());
+	if (n == 5){
+		int a = 1;
+		for (int i=0; i<p.size(); ++i)
+			a = a*p[i];
+		for (int i=0; i<ne.size(); ++i)
+			a = a*ne[i];
 
-	int last = u%w;
-	int l_val = u/w;
-	int f = w*(l_val*(l_val - 1))/2;
-	f += last*l_val;
+		cout << a << endl;
+		return;
+	}
 
-	cout << f<< endl;
+	if (p.size() == 0){
+		int a = 1;
+		int tot = 0;
+		for (int i=(((int)ne.size())-1); i>=0; --i){
+			if (tot == 5){
+				break;
+			}
+			a = a*ne[i];
+			tot++;
+		}
+		cout << a << endl;
+	}
+	else {
+		int best = -E13;
+		for (int pp = 1; pp <=5; pp+=2){
+			if (pp > p.size()) break;
+			int other = 5 - pp;
+			if (other > ne.size()) continue;
+			int cur = 1;
+			int tot = 0;
+			for (int i=(((int)p.size())-1); i>=0; --i){
+				if (tot == pp){
+					break;
+				}
+				cur = cur*p[i];
+				tot++;
+				
+			}
+			for (int i=0; i<=5 ; ++i){
+				if (tot == 5){
+					break;
+				}
+				cur = cur*ne[i];
+				tot++;
+			}
+			best = max(best, cur);
+		}
+		cout << best << endl;
+	}
+
+
 }
 
 signed main(){
@@ -80,4 +133,4 @@ signed main(){
 	}
 	
 	return 0;
-}
+}	

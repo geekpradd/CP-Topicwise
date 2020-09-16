@@ -1,3 +1,4 @@
+
 #include <bits/stdc++.h>
 #include <ctime>
 #include <cstdlib>
@@ -53,20 +54,52 @@ int inverse(int n){
 	return power(n, MOD-2);
 }
 
-
+void dfs (int u, int prev, vector<int>&sz, vector< vector<int> > &g, vector<int> &centroid, int n) {
+    sz[u] = 1;
+    bool is_centroid = true;
+    for (auto v : g[u]) {
+    	if (v != prev) {
+            dfs(v, u, sz, g, centroid, n);
+            sz[u] += sz[v];
+            if (sz[v] > n / 2) is_centroid = false;
+    	}	
+    }
+    if (n - sz[u] > n / 2) is_centroid = false;
+    if (is_centroid) centroid.push_back(u);
+}
+vector<int> get_centroid( vector<vector<int>> &adj, int n) {
+        vector<int> centroids;
+        vector<int> sz(n+1);
+        
+        dfs(1, -1, sz, adj, centroids, n);
+        return centroids;
+}
 
 void solve(){
-	int m, d, w; cin >> m >> d >> w;
-	int gc = __gcd(w, d-1);
-	w /= gc;
-	int u = min(d, m);
+	int n; cin >> n;
+	vector < vector<int> > adj(n+1);
+	for (int i=0; i<n-1; ++i){
+		int x, y; cin >> x >> y;
+		adj[x].pb(y);
+		adj[y].pb(x);
+	}
+	vector<int> centroids = get_centroid(adj, n);
+	if (centroids.size() == 1){
+		cout << 1 << " " << adj[1][0] <<  endl;
+		cout << 1 << " " << adj[1][0] <<  endl;
+	}
+	else {
+		int other = -1;
+		for (int i=0; i<adj[centroids[0]].size(); ++i){
+			if (adj[centroids[0]][i] != centroids[1]){
+				other = adj[centroids[0]][i];
+				break;
+			}
+		}
+		cout << other << " " << centroids[0] << endl;
+		cout << other << " " << centroids[1] << endl;
+	}
 
-	int last = u%w;
-	int l_val = u/w;
-	int f = w*(l_val*(l_val - 1))/2;
-	f += last*l_val;
-
-	cout << f<< endl;
 }
 
 signed main(){

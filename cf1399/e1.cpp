@@ -53,20 +53,57 @@ int inverse(int n){
 	return power(n, MOD-2);
 }
 
+int dfs(int cur, vector<ii> adj[], vector<ii>&edges, int p){
+	bool leaf = true;
+	int tot = 0;
+	for (ii &to: adj[cur]){
+		if (to.first != p){
+			leaf = false;
+			int count = dfs(to.first,adj, edges, cur);
+			edges[to.second].second = count;
+			tot += count;
+		}
+	}
+	if (!leaf)
+		return tot;
+	else
+		return 1;
 
+}
 
 void solve(){
-	int m, d, w; cin >> m >> d >> w;
-	int gc = __gcd(w, d-1);
-	w /= gc;
-	int u = min(d, m);
+	int n, s; cin >> n >> s;
+	vector<ii> adj[n+1];
+	vector<ii> edges(n-1);
+	for (int i=0; i<n-1; ++i){
+		int u, v, w; cin >> u >> v >> w;
+		adj[u].pb(mp(v, i));
+		adj[v].pb(mp(u, i));
+		edges[i] = mp(w, 0);
+	}
+	dfs(1, adj, edges, 1);
 
-	int last = u%w;
-	int l_val = u/w;
-	int f = w*(l_val*(l_val - 1))/2;
-	f += last*l_val;
+	int current = 0;
+	priority_queue<ii> best;
+	for (int i=0; i<n-1; ++i){
+		current += edges[i].first * edges[i].second;
+		int diff = edges[i].first - (edges[i].first/2);
+		best.push(mp(diff*edges[i].second, i));
+	}
+	int steps = 0;
+	while (current > s){
+		ii top = best.top();
+		best.pop();
+		current -= top.first;
+		steps++;
+		edges[top.second].first /= 2;
+		int diff = edges[top.second].first - (edges[top.second].first/2);
+		if (diff != 0)
+			best.push(mp(diff*edges[top.second].second, top.second));
+	}
 
-	cout << f<< endl;
+	cout << steps << endl;
+
 }
 
 signed main(){
@@ -78,6 +115,4 @@ signed main(){
 	while (t--){
 		solve();
 	}
-	
-	return 0;
 }

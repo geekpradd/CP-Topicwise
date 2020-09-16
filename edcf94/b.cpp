@@ -53,21 +53,46 @@ int inverse(int n){
 	return power(n, MOD-2);
 }
 
-
-
 void solve(){
-	int m, d, w; cin >> m >> d >> w;
-	int gc = __gcd(w, d-1);
-	w /= gc;
-	int u = min(d, m);
+	int p, f; cin >> p >> f;
 
-	int last = u%w;
-	int l_val = u/w;
-	int f = w*(l_val*(l_val - 1))/2;
-	f += last*l_val;
+	int x, y; cin >> x >> y;
+	int s, w; cin >> s >> w;
 
-	cout << f<< endl;
-}
+	if (s > w){
+		swap(s,w);
+		swap(x, y);
+	}
+	int cap_p = p/s; int cap_f = f/s;
+	int left_p = p%s; int left_f = f%s;
+	if (cap_p + cap_f <= x){
+		cout << cap_p + cap_f << endl;
+	}
+	else {
+		// cout << "gonna take " << x << endl;
+
+		int total = x;
+		int c = cap_f + cap_p - x;
+		// cout << c << endl;
+		int best = 0;
+		for (int i=	0; i<=min(c, cap_p); ++i){
+			if ((c-i)>cap_f){
+				continue;
+			} 
+			int s1 = left_p + i*s;
+			int s2 = left_f + (c-i)*s;
+			int value = (s1/w) + (s2/w);
+			if (value > y){
+				value = y;
+			}
+			// cout << "at " << i << " got " << value << endl;
+			// cout << "s1 " << s1 << endl;
+			// cout << "s2 " << s2 << endl;
+			best = max(best, value);
+		}
+		cout << total + best << endl;
+	}
+}	
 
 signed main(){
 	cin.tie(NULL); ios_base::sync_with_stdio(false);

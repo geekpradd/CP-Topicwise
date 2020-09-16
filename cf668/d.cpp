@@ -1,3 +1,4 @@
+
 #include <bits/stdc++.h>
 #include <ctime>
 #include <cstdlib>
@@ -53,20 +54,56 @@ int inverse(int n){
 	return power(n, MOD-2);
 }
 
-
+void dfs(int cur, vector<int> &depth, vector<int> adj[], int d){
+	depth[cur] = d;
+	for (int to: adj[cur]){
+		if (depth[to] == -1){
+			dfs(to, depth, adj, d+1);
+		}
+	}
+}
 
 void solve(){
-	int m, d, w; cin >> m >> d >> w;
-	int gc = __gcd(w, d-1);
-	w /= gc;
-	int u = min(d, m);
+	int n, a, b, da, db; cin >> n >> a >> b >> da >> db;
 
-	int last = u%w;
-	int l_val = u/w;
-	int f = w*(l_val*(l_val - 1))/2;
-	f += last*l_val;
-
-	cout << f<< endl;
+	vector<int> adj[n+1];
+	for (int i=0; i<n-1; ++i){
+		int u, v; cin >> u >> v;
+		adj[u].pb(v);
+		adj[v].pb(u);
+	}
+	if (db <= 2*da){
+		cout << "Alice" << endl;
+	}
+	else {
+		vector<int> depth(n+1, -1);
+		dfs(a, depth, adj, 0);
+		if (depth[b] <= da){
+			cout << "Alice" << endl;
+		}
+		else {
+			int mx = 0;
+			int mi = a;
+			for (int i=1; i<=n; ++i){
+				if (depth[i] > mx){
+					mx = depth[i]; mi = i;
+				}
+			}
+			vector<int> depth2(n+1, -1);
+			dfs(mi, depth2, adj, 0);
+			int mx2 = 0;
+			for (int i=1; i<=n; ++i){
+				mx2 = max(depth2[i], mx2);
+			}
+			// DUMP(mx2);
+			if (mx2 > 2*da){
+				cout << "Bob" << endl;
+			}
+			else {
+				cout << "Alice" << endl;
+			}
+		}
+	}
 }
 
 signed main(){

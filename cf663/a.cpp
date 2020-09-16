@@ -54,19 +54,12 @@ int inverse(int n){
 }
 
 
-
 void solve(){
-	int m, d, w; cin >> m >> d >> w;
-	int gc = __gcd(w, d-1);
-	w /= gc;
-	int u = min(d, m);
-
-	int last = u%w;
-	int l_val = u/w;
-	int f = w*(l_val*(l_val - 1))/2;
-	f += last*l_val;
-
-	cout << f<< endl;
+	int n; cin >> n;
+	for (int i=0; i<n; ++i){
+		cout << n-i << " ";
+	}
+	cout << endl;
 }
 
 signed main(){
@@ -78,6 +71,4 @@ signed main(){
 	while (t--){
 		solve();
 	}
-	
-	return 0;
 }

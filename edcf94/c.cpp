@@ -53,20 +53,64 @@ int inverse(int n){
 	return power(n, MOD-2);
 }
 
-
-
 void solve(){
-	int m, d, w; cin >> m >> d >> w;
-	int gc = __gcd(w, d-1);
-	w /= gc;
-	int u = min(d, m);
+	string s; cin >> s;
+	int x; cin >> x;
+	vector<int> ans(s.size(), -1);	
 
-	int last = u%w;
-	int l_val = u/w;
-	int f = w*(l_val*(l_val - 1))/2;
-	f += last*l_val;
-
-	cout << f<< endl;
+	for (int i=0; i<s.size(); ++i){
+		if (s[i] == '1') continue;
+		if (i-x >= 0){
+			ans[i-x] = 0;
+			// DUMP(i-x);
+		}
+		if (i+x < s.size()){
+			ans[i+x] = 0;
+			// DUMP(i+x);
+		}
+	}
+	bool pos = 1;
+	for (int i=0; i<s.size(); ++i){
+		if (s[i] == '0') continue;
+		int got = 0;
+		if (i-x >= 0){
+			if (ans[i-x] == -1){
+				got++;
+				ans[i-x] = 1;
+			}
+			else if (ans[i-x] == 1){
+				got++;
+			}
+		}
+		if (i+x < s.size()){
+			if (ans[i+x] == -1){
+				got++;
+				ans[i+x] = 1;
+			}
+			else if(ans[i+x] == 1){
+				got++;
+			}
+		}
+		// DUMP(got);
+		// DUMP(i);
+		if (!got){
+			pos = 0;
+		}
+	}
+	if (!pos){
+		d1(-1);
+	}
+	else {
+		for (int i=0; i<s.size(); ++i){
+			if (ans[i]!=-1){
+				cout << ans[i];
+			}
+			else {
+				cout << 0;
+			}
+		}
+		cout << endl;
+	}
 }
 
 signed main(){
