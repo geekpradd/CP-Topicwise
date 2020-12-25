@@ -52,9 +52,73 @@ int power(int base, int exp){
 int inverse(int n){
 	return power(n, MOD-2);
 }
+ii dfs(int cur, vector<bool> &visited, vector<int> adj[]){
+	ii ans = mp(1, adj[cur].size());
+	visited[cur] = 1;
+	for (int to: adj[cur]){
+		if (!visited[to]){
+			ii v = dfs(to, visited, adj);
+			ans.first += v.first;
+			ans.second += v.second;
+		}
+	}
+
+	return ans;
+}
 
 void solve(){
+	int n, m, k; cin >> n >> m >> k;	
+	vector<int> adj[n+1];
+	REP0(i, m){
+		int u, v; cin >> u >> v;
+		adj[u].pb(v);
+		adj[v].pb(u);
+	}
+	vector<bool> visited(n+1, false);
+	vector<ii> comps;
+	for (int i=1; i<=n; ++i){
+		if (!visited[i]){
+			comps.pb(dfs(i, visited, adj));
+		}
+	}
+	int red = 0;
+	sort(comps.begin(), comps.end(), greater<ii>());
+	for (ii &v: comps){
+		int ed = v.second/2;
+		int extra = ed - v.first + 1;
+		red += extra;
+	}
 
+	// cout << comps << endl;
+	int used = 0;
+	bool free = 1;
+	int big = comps[0].first;
+	int i = 1;
+	for (;i<comps.size(); ++i){
+		if (used == red){
+			free = 0;
+		}
+		if (used == k){
+			break;
+		}
+		used++;
+		
+		if (free){
+			big += comps[i].first;
+		}
+		else {
+			big += comps[i].first - 1;
+		}
+
+		
+		
+	}
+	int ans = (big*(big-1))/2;
+	for (int j=i; j<comps.size(); ++j){
+		ans += (comps[j].first*(comps[j].first-1))/2;
+	}
+
+	cout << ans << endl;
 }
 
 signed main(){
@@ -62,10 +126,7 @@ signed main(){
 	#ifndef ONLINE_JUDGE
 	freopen("input.txt", "r", stdin);
 	#endif
-	int t; cin >> t;
-	while (t--){
-		solve();
-	}
+	solve();
 	
 	return 0;
 }

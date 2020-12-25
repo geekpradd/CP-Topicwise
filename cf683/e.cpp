@@ -1,7 +1,8 @@
+
 #include <bits/stdc++.h>
 #include <ctime>
 #include <cstdlib>
-
+#define int long long
 #define ii pair<int, int>
 #define pb push_back
 #define mp make_pair
@@ -53,81 +54,74 @@ int inverse(int n){
 	return power(n, MOD-2);
 }
 
-void solve(){
-	int n; cin >> n;
-	int a[n];
-	for (int i=0; i<n; ++i) cin >> a[i];
-	int  c = 0;
-	int s[n]; s[0] = s[n-1] = 0;
-	for (int i=1; i<n-1; ++i){
-		if (a[i]  > a[i-1] && a[i] > a[i+1]){
-			c++; s[i] = 1;
-		}
-		else if (a[i] < a[i-1] && a[i] < a[i+1]) {
-			c++; s[i] = -1;
+int ans(int bit, vector<int>::iterator left, vector<int>::iterator right, int base){
+	if (left == right) return 0;
+	int num = 1LL << bit; num += base;
+	int oth = 1LL << bit;
+	// DUMP("huh");
+	auto low = lower_bound(left, right, num);
+	int pos = 0;
+
+	if (low != right){
+		if (bit != 0){
+			pos = max(pos, 1+ans(bit-1, left, low, base));
 		}
 		else {
-			s[i] = 0;
-		}
-	}
-	int delta = 0;
-	for (int i=1; i<n-1; ++i){
-		if (s[i] == 1 || s[i] == -1){
-			if (s[i-1] == s[i+1]){
-				delta = max(delta, 1 + 2*abs(s[i-1]));
+			if (left != low){
+				pos = max(pos, 2LL);
 			}
 			else {
-				if (s[i] == 1){
-					if (s[i-1] == -1){
-						if (a[i-1] >= a[i+1]){
-							delta = max(delta, 2);
-						}
-						else {
-							delta = max(delta, 1);
-						}
-					}
-					if (s[i+1] == -1){
-						if (a[i+1] >= a[i-1]){
-							delta = max(delta, 2);
-						}
-						else {
-							delta = max(delta, 1);
-						}
-					}
-				}
-				else {
-					if (s[i-1] == 1){
-						if (a[i-1] <= a[i+1]){
-							delta = max(delta, 2);
-						}
-						else {
-							delta = max(delta, 1);
-						}
-					}
-					if (s[i+1] == 1){
-						if (a[i+1] <= a[i-1]){
-							delta = max(delta, 2);
-						}
-						else {
-							delta = max(delta, 1);
-						}
-					}
-				}
+				pos = max(pos, 1LL);
 			}
 		}
 	}
-	cout << c - delta << endl;
-}	
+	else if (bit !=0){
+			// DUMP("hsuh");
+
+		pos = max(pos, ans(bit-1, left, right, base));
+	}
+	if (low != left){
+		
+		if (bit != 0){
+			pos = max(pos, 1+ans(bit-1, low, right, num));
+
+		}
+		else {
+			if (right != low){
+				pos = max(pos, 2LL);
+			}
+			else {
+				pos = max(pos, 1LL);
+			}
+		}
+	}
+	else if (bit !=0){
+			// DUMP("hussh");
+
+		pos = max(pos, ans(bit-1, left, right, num));
+	}
+
+	// DUMP(bit);
+	// DUMP(base);
+	// DUMP(pos);
+	return pos;
+}
+void solve(){
+	int n; cin >> n;
+	vector<int> a(n);
+	for (int i=0; i<n; ++i) cin >> a[i];
+	sort(a.begin(), a.end());
+	int count = ans(32, a.begin(), a.end(), 0);
+
+	cout << n - count << endl;
+}
 
 signed main(){
 	cin.tie(NULL); ios_base::sync_with_stdio(false);
 	#ifndef ONLINE_JUDGE
 	freopen("input.txt", "r", stdin);
 	#endif
-	int t; cin >> t;
-	while (t--){
-		solve();
-	}
+	solve();
 	
 	return 0;
 }

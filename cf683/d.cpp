@@ -1,7 +1,8 @@
+
 #include <bits/stdc++.h>
 #include <ctime>
 #include <cstdlib>
-
+#define int long long
 #define ii pair<int, int>
 #define pb push_back
 #define mp make_pair
@@ -54,80 +55,64 @@ int inverse(int n){
 }
 
 void solve(){
-	int n; cin >> n;
-	int a[n];
-	for (int i=0; i<n; ++i) cin >> a[i];
-	int  c = 0;
-	int s[n]; s[0] = s[n-1] = 0;
-	for (int i=1; i<n-1; ++i){
-		if (a[i]  > a[i-1] && a[i] > a[i+1]){
-			c++; s[i] = 1;
-		}
-		else if (a[i] < a[i-1] && a[i] < a[i+1]) {
-			c++; s[i] = -1;
-		}
-		else {
-			s[i] = 0;
-		}
-	}
-	int delta = 0;
-	for (int i=1; i<n-1; ++i){
-		if (s[i] == 1 || s[i] == -1){
-			if (s[i-1] == s[i+1]){
-				delta = max(delta, 1 + 2*abs(s[i-1]));
+	int n, m; cin >> n >> m;
+	string a, b; cin >> a;
+	cin >> b;
+	vector< vector<int> >  dp(n+1, vector<int>(m+1, 0));
+
+	// vector<int> pos_a[26];
+	// vector<int> pos_b[26];
+	// for (int i=0; i<n; ++i){
+	// 	pos_a[a[i]-'a'].push_back(i+1);
+	// }
+	// for (int i=0; i<m; ++i){
+	// 	pos_b[b[i]-'a'].push_back(i+1);
+	// }
+	int ans = 0;
+	vector<int> latest(26, -1);
+	for (int i=1; i<=n; ++i){
+		latest[a[i-1]-'a'] = i;
+		vector<int> oth(26, -1);
+		for (int j=1; j<=m; ++j){
+			oth[b[j-1]-'a'] = j;
+			if (a[i-1] != b[j-1]){
+				dp[i][j] = max(dp[i-1][j-1]-2, 0LL);
 			}
 			else {
-				if (s[i] == 1){
-					if (s[i-1] == -1){
-						if (a[i-1] >= a[i+1]){
-							delta = max(delta, 2);
-						}
-						else {
-							delta = max(delta, 1);
-						}
-					}
-					if (s[i+1] == -1){
-						if (a[i+1] >= a[i-1]){
-							delta = max(delta, 2);
-						}
-						else {
-							delta = max(delta, 1);
-						}
-					}
-				}
-				else {
-					if (s[i-1] == 1){
-						if (a[i-1] <= a[i+1]){
-							delta = max(delta, 2);
-						}
-						else {
-							delta = max(delta, 1);
-						}
-					}
-					if (s[i+1] == 1){
-						if (a[i+1] <= a[i-1]){
-							delta = max(delta, 2);
-						}
-						else {
-							delta = max(delta, 1);
-						}
-					}
-				}
+				dp[i][j] = max(dp[i-1][j-1]+2, 0LL);
 			}
+			// auto first_l = upper_bound(pos_b[a[i-1]-'a'].begin(), pos_b[a[i-1]-'a'].end(), j);
+			// if (first_l != pos_b[a[i-1]-'a'].begin()){
+			// 	first_l--;
+			// 	int val = *first_l;
+			// 	dp[i][j] = max(dp[i][j], dp[i-1][val-1] + 2 - (j-val));
+			// }
+			int indexs = oth[a[i-1]-'a'];
+			// auto sfirst_l = upper_bound(pos_a[b[j-1]-'a'].begin(), pos_a[b[j-1]-'a'].end(), i);
+			if (indexs != -1){
+				dp[i][j] = max(dp[i][j], dp[i-1][indexs-1] + 2 - (j-indexs));
+			}
+			int index = latest[b[j-1]-'a'];
+			// auto sfirst_l = upper_bound(pos_a[b[j-1]-'a'].begin(), pos_a[b[j-1]-'a'].end(), i);
+			if (index != -1){
+				dp[i][j] = max(dp[i][j], dp[index-1][j-1] + 2 - (i-index));
+			}
+			// if (sfirst_l != pos_a[b[j-1]-'a'].begin()){
+			// 	sfirst_l--;
+			// 	int val = *sfirst_l;
+			// 	dp[i][j] = max(dp[i][j], dp[val-1][j-1] + 2 - (i-val));
+			// }
+			ans = max(ans, dp[i][j]);
 		}
 	}
-	cout << c - delta << endl;
-}	
+	cout << ans << endl;
+}
 
 signed main(){
 	cin.tie(NULL); ios_base::sync_with_stdio(false);
 	#ifndef ONLINE_JUDGE
 	freopen("input.txt", "r", stdin);
 	#endif
-	int t; cin >> t;
-	while (t--){
-		solve();
-	}
-	
+	solve();
 	return 0;
 }

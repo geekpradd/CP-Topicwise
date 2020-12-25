@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 #include <ctime>
 #include <cstdlib>
-
+#define int long long
 #define ii pair<int, int>
 #define pb push_back
 #define mp make_pair
@@ -54,70 +54,39 @@ int inverse(int n){
 }
 
 void solve(){
-	int n; cin >> n;
-	int a[n];
-	for (int i=0; i<n; ++i) cin >> a[i];
-	int  c = 0;
-	int s[n]; s[0] = s[n-1] = 0;
-	for (int i=1; i<n-1; ++i){
-		if (a[i]  > a[i-1] && a[i] > a[i+1]){
-			c++; s[i] = 1;
-		}
-		else if (a[i] < a[i-1] && a[i] < a[i+1]) {
-			c++; s[i] = -1;
-		}
-		else {
-			s[i] = 0;
-		}
-	}
-	int delta = 0;
-	for (int i=1; i<n-1; ++i){
-		if (s[i] == 1 || s[i] == -1){
-			if (s[i-1] == s[i+1]){
-				delta = max(delta, 1 + 2*abs(s[i-1]));
+	int n, m; cin >> n >> m;
+	vector<int> pos, neg;
+	int s_p = 0, s_n = 0;
+	bool zer = false;
+	for (int i=0; i<n; ++i){
+		for (int j=0; j<m; ++j){
+			int val; cin >> val;
+			if (val == 0){
+				zer = 1;
+			}
+			if (val >=0){
+				s_p += val;
 			}
 			else {
-				if (s[i] == 1){
-					if (s[i-1] == -1){
-						if (a[i-1] >= a[i+1]){
-							delta = max(delta, 2);
-						}
-						else {
-							delta = max(delta, 1);
-						}
-					}
-					if (s[i+1] == -1){
-						if (a[i+1] >= a[i-1]){
-							delta = max(delta, 2);
-						}
-						else {
-							delta = max(delta, 1);
-						}
-					}
-				}
-				else {
-					if (s[i-1] == 1){
-						if (a[i-1] <= a[i+1]){
-							delta = max(delta, 2);
-						}
-						else {
-							delta = max(delta, 1);
-						}
-					}
-					if (s[i+1] == 1){
-						if (a[i+1] <= a[i-1]){
-							delta = max(delta, 2);
-						}
-						else {
-							delta = max(delta, 1);
-						}
-					}
-				}
+				s_n += val;
+			}
+			if (val > 0) pos.push_back(val);
+			else {
+				neg.push_back(val);
 			}
 		}
 	}
-	cout << c - delta << endl;
-}	
+	if (neg.size() %2 == 0 || zer){
+		cout << s_p - s_n << endl;
+	}
+	else {
+		sort(neg.begin(), neg.end());
+		sort(pos.begin(), pos.end());
+		int minimal = min(-neg[neg.size()-1], pos[0]);
+		cout << s_p - s_n - 2*minimal << endl;
+	}
+
+}
 
 signed main(){
 	cin.tie(NULL); ios_base::sync_with_stdio(false);

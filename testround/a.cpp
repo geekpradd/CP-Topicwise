@@ -54,7 +54,18 @@ int inverse(int n){
 }
 
 void solve(){
-
+	int n; cin >> n;
+	if (n == 1){
+		d1(9);
+		return;
+	}
+	cout << 98;
+	int cur = 9;
+	for (int i=0; i<n-2; ++i){
+		cout << cur;
+		cur = (cur+1)%10;
+	}
+	cout << endl;
 }
 
 signed main(){

@@ -1,0 +1,25 @@
+<html>
+   <head>
+      <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js">
+      </script>
+      <script>
+         jQuery(document).ready(function($) {
+            $('body').keypress(function(e) {
+               alert(String.fromCharCode(e.which));
+            });
+         });
+         jQuery.fn.simulateKeyPress = function(character) {
+            jQuery(this).trigger({
+               type: 'keypress',
+               which: character.charCodeAt(0)
+            });
+         };
+         setTimeout(function() {
+            $('body').simulateKeyPress('z');
+         }, 2000);
+      </script>
+   </head>
+   <body>
+      <p>press any key</p>
+   </body>
+</html>

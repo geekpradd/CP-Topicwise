@@ -1,7 +1,8 @@
+
 #include <bits/stdc++.h>
 #include <ctime>
 #include <cstdlib>
-
+#define int long long
 #define ii pair<int, int>
 #define pb push_back
 #define mp make_pair
@@ -55,69 +56,45 @@ int inverse(int n){
 
 void solve(){
 	int n; cin >> n;
-	int a[n];
-	for (int i=0; i<n; ++i) cin >> a[i];
-	int  c = 0;
-	int s[n]; s[0] = s[n-1] = 0;
-	for (int i=1; i<n-1; ++i){
-		if (a[i]  > a[i-1] && a[i] > a[i+1]){
-			c++; s[i] = 1;
-		}
-		else if (a[i] < a[i-1] && a[i] < a[i+1]) {
-			c++; s[i] = -1;
-		}
-		else {
-			s[i] = 0;
+	char grid[n][n];
+	for (int i=0; i<n; ++i){
+		for (int j=0; j<n; ++j){
+			cin >> grid[i][j];
 		}
 	}
-	int delta = 0;
-	for (int i=1; i<n-1; ++i){
-		if (s[i] == 1 || s[i] == -1){
-			if (s[i-1] == s[i+1]){
-				delta = max(delta, 1 + 2*abs(s[i-1]));
+	vector<ii> vals;
+	if (grid[0][1] == grid[1][0]){
+		if (grid[n-1][n-2] == grid[0][1]){
+			vals.pb(mp(n, n-1));
+		}
+		if (grid[n-2][n-1] == grid[0][1]){
+			vals.pb(mp(n-1, n));
+		}
+	}
+	else {
+		if (grid[n-1][n-2] == grid[n-2][n-1]){
+			if (grid[0][1] == grid[n-1][n-2]){
+				vals.pb(mp(1, 2));
 			}
 			else {
-				if (s[i] == 1){
-					if (s[i-1] == -1){
-						if (a[i-1] >= a[i+1]){
-							delta = max(delta, 2);
-						}
-						else {
-							delta = max(delta, 1);
-						}
-					}
-					if (s[i+1] == -1){
-						if (a[i+1] >= a[i-1]){
-							delta = max(delta, 2);
-						}
-						else {
-							delta = max(delta, 1);
-						}
-					}
-				}
-				else {
-					if (s[i-1] == 1){
-						if (a[i-1] <= a[i+1]){
-							delta = max(delta, 2);
-						}
-						else {
-							delta = max(delta, 1);
-						}
-					}
-					if (s[i+1] == 1){
-						if (a[i+1] <= a[i-1]){
-							delta = max(delta, 2);
-						}
-						else {
-							delta = max(delta, 1);
-						}
-					}
-				}
+				vals.pb(mp(2, 1));
+			}
+		}
+		else {
+			vals.pb(mp(2, 1));
+			if (grid[n-1][n-2] == grid[0][1]){
+				vals.pb(mp(n, n-1));
+			}
+			if (grid[n-2][n-1] == grid[0][1]){
+				vals.pb(mp(n-1, n));
 			}
 		}
 	}
-	cout << c - delta << endl;
-}	
+	cout << vals.size() << endl;
+	for (ii z: vals){
+		cout << z.first << " " << z.second << endl;
+	}
+}
 
 signed main(){
 	cin.tie(NULL); ios_base::sync_with_stdio(false);

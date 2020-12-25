@@ -1,7 +1,8 @@
+
 #include <bits/stdc++.h>
 #include <ctime>
 #include <cstdlib>
-
+#define int long long
 #define ii pair<int, int>
 #define pb push_back
 #define mp make_pair
@@ -54,70 +55,8 @@ int inverse(int n){
 }
 
 void solve(){
-	int n; cin >> n;
-	int a[n];
-	for (int i=0; i<n; ++i) cin >> a[i];
-	int  c = 0;
-	int s[n]; s[0] = s[n-1] = 0;
-	for (int i=1; i<n-1; ++i){
-		if (a[i]  > a[i-1] && a[i] > a[i+1]){
-			c++; s[i] = 1;
-		}
-		else if (a[i] < a[i-1] && a[i] < a[i+1]) {
-			c++; s[i] = -1;
-		}
-		else {
-			s[i] = 0;
-		}
-	}
-	int delta = 0;
-	for (int i=1; i<n-1; ++i){
-		if (s[i] == 1 || s[i] == -1){
-			if (s[i-1] == s[i+1]){
-				delta = max(delta, 1 + 2*abs(s[i-1]));
-			}
-			else {
-				if (s[i] == 1){
-					if (s[i-1] == -1){
-						if (a[i-1] >= a[i+1]){
-							delta = max(delta, 2);
-						}
-						else {
-							delta = max(delta, 1);
-						}
-					}
-					if (s[i+1] == -1){
-						if (a[i+1] >= a[i-1]){
-							delta = max(delta, 2);
-						}
-						else {
-							delta = max(delta, 1);
-						}
-					}
-				}
-				else {
-					if (s[i-1] == 1){
-						if (a[i-1] <= a[i+1]){
-							delta = max(delta, 2);
-						}
-						else {
-							delta = max(delta, 1);
-						}
-					}
-					if (s[i+1] == 1){
-						if (a[i+1] <= a[i-1]){
-							delta = max(delta, 2);
-						}
-						else {
-							delta = max(delta, 1);
-						}
-					}
-				}
-			}
-		}
-	}
-	cout << c - delta << endl;
-}	
+
+}
 
 signed main(){
 	cin.tie(NULL); ios_base::sync_with_stdio(false);

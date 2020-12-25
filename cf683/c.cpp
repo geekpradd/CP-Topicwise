@@ -1,7 +1,8 @@
+
 #include <bits/stdc++.h>
 #include <ctime>
 #include <cstdlib>
-
+#define int long long
 #define ii pair<int, int>
 #define pb push_back
 #define mp make_pair
@@ -54,70 +55,60 @@ int inverse(int n){
 }
 
 void solve(){
-	int n; cin >> n;
-	int a[n];
-	for (int i=0; i<n; ++i) cin >> a[i];
-	int  c = 0;
-	int s[n]; s[0] = s[n-1] = 0;
-	for (int i=1; i<n-1; ++i){
-		if (a[i]  > a[i-1] && a[i] > a[i+1]){
-			c++; s[i] = 1;
+	int n, c; cin >> n >> c;
+	vector<ii> w(n);
+
+	for (int i=0; i<n; ++i) {
+		cin >> w[i].first; w[i].second = i+1;
+	}
+	sort(w.begin(), w.end());
+
+	bool z = 0; int g;
+	int last = -1;
+
+	int low;
+	if (c%2){
+		low = (c/2) + 1;
+	}
+	else {
+		low = c/2;
+	}
+	for (int i=0; i<n; ++i){
+		if (w[i].first>=low && w[i].first <= c){
+			z = 1; g = w[i].second; break;
 		}
-		else if (a[i] < a[i-1] && a[i] < a[i+1]) {
-			c++; s[i] = -1;
-		}
-		else {
-			s[i] = 0;
+		if (w[i].first < low){
+			last = i;
 		}
 	}
-	int delta = 0;
-	for (int i=1; i<n-1; ++i){
-		if (s[i] == 1 || s[i] == -1){
-			if (s[i-1] == s[i+1]){
-				delta = max(delta, 1 + 2*abs(s[i-1]));
+
+	if (z){
+		cout << 1 << endl;
+		cout << g << endl;
+		return;
+	}
+	if (last == -1){
+		cout << -1 << endl;
+		return;
+	}
+	int sum = 0;
+	bool got = 0;
+	for (int i=0; i<=last; ++i){
+		sum += w[i].first;
+		if (sum>=low && sum <= c){
+			cout << i+1 << endl;
+			for (int j=0; j<=i; ++j){
+				cout << w[j].second << " ";
 			}
-			else {
-				if (s[i] == 1){
-					if (s[i-1] == -1){
-						if (a[i-1] >= a[i+1]){
-							delta = max(delta, 2);
-						}
-						else {
-							delta = max(delta, 1);
-						}
-					}
-					if (s[i+1] == -1){
-						if (a[i+1] >= a[i-1]){
-							delta = max(delta, 2);
-						}
-						else {
-							delta = max(delta, 1);
-						}
-					}
-				}
-				else {
-					if (s[i-1] == 1){
-						if (a[i-1] <= a[i+1]){
-							delta = max(delta, 2);
-						}
-						else {
-							delta = max(delta, 1);
-						}
-					}
-					if (s[i+1] == 1){
-						if (a[i+1] <= a[i-1]){
-							delta = max(delta, 2);
-						}
-						else {
-							delta = max(delta, 1);
-						}
-					}
-				}
-			}
+			cout << endl;
+			got = 1;
+			break;
 		}
 	}
-	cout << c - delta << endl;
-}	
+	if (!got){
+		cout << -1 << endl;
+	}
+}
 
 signed main(){
 	cin.tie(NULL); ios_base::sync_with_stdio(false);
